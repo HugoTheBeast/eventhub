@@ -1,0 +1,52 @@
+# ========================
+# React + Tailwind (Frontend)
+# ========================
+client/node_modules/
+client/.env
+client/.env.local
+client/build/
+client/dist/
+client/.cache/
+client/.DS_Store
+client/coverage/
+
+# Tailwind/JSS generated files
+client/.sass-cache/
+client/.vscode/
+
+# IDE/Editor files (optional)
+client/.idea/
+
+# ========================
+# Flask (Backend)
+# ========================
+server/__pycache__/
+server/.env
+server/venv/          # Python virtual environment
+server/env/           # Alternative env folder name
+server/*.pyc
+server/*.pyo
+server/*.pyd
+server/.python-version
+server/instance/      # Flask instance folder (if used)
+server/.flaskenv
+
+# Database/files (if applicable)
+server/*.sqlite
+server/*.db
+server/migrations/
+
+# Logs and temp files
+server/logs/
+server/tmp/
+server/*.log
+
+# ========================
+# System/IDE Files (Global)
+# ========================
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
