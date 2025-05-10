@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\VSWorkspace\AdvancedWeb\eventhub\server\venv"
+VIRTUAL_ENV="D:\Temp\eventhub\server\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

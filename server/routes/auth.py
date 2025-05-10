@@ -69,7 +69,10 @@ def login():
     try:
         user = User.query.filter_by(email=data["email"].lower().strip()).first()
 
-        if not user or not user.check_password(data["password"]):
+        if not user:
+            return jsonify({"error": "Invalid email or password"}), 401
+            
+        if not user.check_password(data["password"]):
             return jsonify({"error": "Invalid email or password"}), 401
 
         # Create JWT token with consistent identity

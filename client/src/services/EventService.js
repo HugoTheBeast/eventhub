@@ -24,7 +24,10 @@ export const fetchEventById = async (id) => {
 export const createEvent = async (eventData, token) => {
   try {
     const response = await axios.post(`${API_URL}/events`, eventData, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
     });
     return response.data;
   } catch (error) {

@@ -34,30 +34,28 @@ def create_event():
         
     try:
         current_user_id = get_jwt_identity()
-        current_app.logger.debug(f"Current user ID from JWT: {current_user_id}")
-        
-        # Fetch the complete user from database
         user = User.query.get(current_user_id)
-        if not user:
-            current_app.logger.error(f"User not found: {current_user_id}")
-            return jsonify({'error': 'User not found'}), 404
-            
-        if not user.is_organizer:
-            current_app.logger.error(f"User is not organizer: {current_user_id}")
-            return jsonify({'error': 'Only organizers can create events'}), 403
+        
+        if not user or not user.is_organizer:
+            return jsonify({'error': 'Unauthorized'}), 403
 
         data = request.get_json()
         
         # Validate required fields
-        required_fields = ['title', 'date', 'location', 'max_seats']
+        required_fields = ['title', 'date', 'location', 'max_seats', 'category', 'price']
         if not all(field in data for field in required_fields):
-            return jsonify({'error': f'Missing required fields: {required_fields}'}), 400
+            return jsonify({
+                'error': 'Missing required fields',
+                'required_fields': required_fields
+            }), 400
         
-        # Validate max_seats is positive
+        # Validate field types and constraints
         if int(data['max_seats']) <= 0:
-            return jsonify({'error': 'max_seats must be a positive number'}), 400
+            return jsonify({'error': 'max_seats must be positive'}), 400
             
-        # Validate date is in the future
+        if float(data['price']) < 0:
+            return jsonify({'error': 'price cannot be negative'}), 400
+            
         event_date = datetime.fromisoformat(data['date'])
         if event_date <= datetime.utcnow():
             return jsonify({'error': 'Event date must be in the future'}), 400
@@ -70,28 +68,27 @@ def create_event():
             location=data['location'],
             max_seats=int(data['max_seats']),
             available_seats=int(data['max_seats']),
-            organizer_id=user.id
+            organizer_id=current_user_id,
+            category=data['category'],
+            price=float(data['price'])
         )
         
         db.session.add(event)
         db.session.commit()
         
-        current_app.logger.info(f"Event created successfully by user {current_user_id}")
         return jsonify({
             'message': 'Event created successfully',
-            'event_id': event.id,
             'event': event.to_dict()
         }), 201
         
     except ValueError as e:
         db.session.rollback()
-        current_app.logger.error(f"ValueError in create_event: {str(e)}")
         return jsonify({'error': 'Invalid data format', 'details': str(e)}), 400
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"Error creating event: {str(e)}")
-        return jsonify({'error': 'Failed to create event', 'details': str(e)}), 500
-
+        return jsonify({'error': 'Server error', 'details': str(e)}), 500
+    
 # Get single event (public)
 @event_bp.route("/<int:event_id>", methods=["GET", "OPTIONS"])
 def get_event(event_id):

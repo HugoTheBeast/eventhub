@@ -38,7 +38,7 @@ class Event(db.Model):
     organizer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     category = db.Column(db.String(50), nullable=False)  # Made non-nullable
-    image = db.Column(db.String(255), nullable=False)  # Added for event images
+    image = db.Column(db.String(255), nullable=True)  # Added for event images
     price = db.Column(db.Numeric(10, 2), nullable=False)  # Added for ticket price
     
     # Relationships

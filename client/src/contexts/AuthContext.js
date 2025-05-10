@@ -73,28 +73,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
-      });
-      
-      if (res.data.access_token) {
-        localStorage.setItem("token", res.data.access_token);
-        // Store user data if returned by backend
-        if (res.data.user) {
-          localStorage.setItem("user", JSON.stringify(res.data.user));
-          setUser(res.data.user);
-        }
-        setToken(res.data.access_token);
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("Login failed:", error.response?.data || error.message);
-      throw error; // Re-throw for handling in UI
+const login = async (email, password) => {
+  try {
+    const res = await axios.post("http://localhost:5000/api/auth/login", {
+      email,
+      password,
+    });
+    
+    if (!res.data.access_token) {
+      throw new Error("Login failed - no token received");
     }
-  };
+
+    localStorage.setItem("token", res.data.access_token);
+    
+    // Fetch user data
+    const userRes = await axios.get("http://localhost:5000/api/auth/me", {
+      headers: { Authorization: `Bearer ${res.data.access_token}` }
+    });
+
+    const userData = userRes.data;
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+    setToken(res.data.access_token);
+    navigate("/");
+    
+  } catch (error) {
+    console.error("Login error:", error.response?.data || error.message);
+    // Extract the error message from the response if available
+    const errorMessage = error.response?.data?.error || "Invalid email or password";
+    throw new Error(errorMessage); // Throw the specific error message
+  }
+};
 
   const logout = () => {
     localStorage.removeItem("token");
