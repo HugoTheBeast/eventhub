@@ -1,6 +1,6 @@
 # EventHub
 
-![EventHub Logo](path/to/logo.png)
+![EventHub Logo](screenshots/logo.png)
 
 ## Description du projet
 
@@ -39,8 +39,8 @@ EventHub est une application web de gestion d'événements et de réservations p
 ### Page détaillée d'un événement
 ![Détail d'un événement](screenshots/event-detail.png)
 
-### Tableau de bord utilisateur
-![Tableau de bord](screenshots/dashboard.png)
+### Page des réservations utilisateurs
+![Mes réservations](screenshots/mybookings.png)
 
 ## Installation et lancement
 
@@ -53,7 +53,7 @@ EventHub est une application web de gestion d'événements et de réservations p
 
 1. **Cloner le dépôt**
    ```bash
-   git clone https://github.com/votre-utilisateur/eventhub.git
+   git clone https://github.com/HugoTheBeast/eventhub.git
    cd eventhub
    ```
 
@@ -148,7 +148,6 @@ eventhub/
 │   ├── config.py            # Configuration
 │   ├── models/              # Modèles de données
 │   ├── routes/              # Routes API
-│   ├── services/            # Logique métier
 │   └── requirements.txt
 │
 └── README.md                # Ce fichier
